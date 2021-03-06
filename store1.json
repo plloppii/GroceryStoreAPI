@@ -29,13 +29,19 @@
         {
             "item": "yogurt",
             "buy": 3,
-            "discount": 2.35,
+            "discount": "$2.35",
             "limit": 6
         },
         {
             "item": "paper towels",
             "buy": 2,
-            "discount": 2
+            "discount": "$2"
+        },
+        {
+            "item": "Ground Beef",
+            "buy": 2,
+            "discount": "50%",
+            "limit": 5
         }
     ]
 }

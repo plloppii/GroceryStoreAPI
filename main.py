@@ -4,7 +4,6 @@ Grocery Store Checkout Management System
 https://github.com/PillarTechnology/kata-checkout-order-total
 
 '''
-import json
 import os
 from store import Store, StoreItem, Special
 # Admin Inventory Creation:
@@ -17,30 +16,13 @@ from store import Store, StoreItem, Special
 # Support removing scanned item. keep total correct after removal
 # Support Buy N get M of equal or lesser value for %X off, 
 
-# Input of Store Creation
-# json file containing items to be created
-with open("storeitems.json") as f:
-    storeItems=json.load(f)
 
-firstStore=Store()
-for item in storeItems["items"]:
-    createdItem=StoreItem(
-        name=item.get("name"),
-        cost=item.get("cost"),
-        unit=item.get("unit"),
-        markdown=item.get("markdown")
-    )
-    firstStore.addItem(createdItem)
+firstStore=Store(storeFile="store1.json")
 
-for special in storeItems["specials"]:
-    createdSpecial=Special(
-        item=special.get("item"),
-        buy=special.get("buy"),
-        discount=special.get("discount"),
-        limit=special.get("limit")
-    )
-    firstStore.addSpecial(createdSpecial)
+cart=firstStore.createCustomerCart()
+cart.processItems(cartFile="cart1.json")
 
+print(cart.getSubtotal())
 
 # Input During Checkout:
 ["Ground beef", "soup", "lental", "Rice"]

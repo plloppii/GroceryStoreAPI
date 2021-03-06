@@ -19,6 +19,7 @@ Use delaritive approach to creating the store.
 Checkout items are read in chronologically
 
 Specials can be broken down into two categories:
+
 Static Specials can be deducted into a Requirement(Buy X) and Discount(Get Y). 
 After the requirement is met, a discount is applied. The limit being how many times the special can be used.
 
@@ -57,17 +58,33 @@ Example JSON Input for Store Creation:
         {
             item: "Item1",
             buy: 3,
-            discount: 
+            discount: "$1"
         }
     ]
 }
-
+```
+Example JSON Input of Scanned Checkout:
+```
+{
+    "scannedItems": [
+        {
+            "item": "ground bEEf",
+            "qt": 6,
+            "action": "ADD"
+        },
+        {
+            "item": "yogURT",
+            "qt": 1,
+            "action": "ADD"
+        }
+    ]
+}
 ```
 
 
-Usage:
+# Usage:
 python3 main.py
 
 
-Requirements
+# Requirements
 python>=3.0
