@@ -17,12 +17,11 @@ from store import Store, StoreItem, Special
 # Support Buy N get M of equal or lesser value for %X off, 
 
 
-firstStore=Store(storeFile="store1.json")
+store1=Store(storeFile="tests/store1.json")
+cart1=store1.createCustomerCart()
+cart1.processItems(cartFile="tests/cart1.json")
 
-cart=firstStore.createCustomerCart()
-cart.processItems(cartFile="cart1.json")
-
-print(cart.getSubtotal())
+print(cart1.getSubtotal())
 
 # Input During Checkout:
 ["Ground beef", "soup", "lental", "Rice"]

@@ -38,7 +38,7 @@ class Store():
     def __init__(self, storeFile:str):
         # Input of Store Creation
         # json file containing items to be created
-        with open("store1.json") as f:
+        with open(storeFile) as f:
             storeConfig=json.load(f)
         self.items=defaultdict(str)
         self.specials=defaultdict(list)

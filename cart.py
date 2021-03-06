@@ -13,7 +13,7 @@ class CustomerCart():
         self.cart=defaultdict(LineItem)
 
     def processItems(self, cartFile:str):
-        with open("cart1.json") as f:
+        with open(cartFile) as f:
             inputCart=json.load(f)
         scanItems=inputCart.get("scannedItems")
          
