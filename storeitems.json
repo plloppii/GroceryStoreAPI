@@ -1,0 +1,41 @@
+{
+    "items": [
+        {
+            "name": "Ground Beef",
+            "cost": 5,
+            "unit": "lb",
+            "markdown": 0
+        },
+        {
+            "name": "yogurt",
+            "cost": 2.35,
+            "unit": "unit",
+            "markdown": 0.2
+        },
+        {
+            "name": "Granola",
+            "cost": 1.8,
+            "unit": "lb",
+            "markdown": 0.4
+        },
+        {
+            "name": "Paper towels",
+            "cost": 4,
+            "unit": "unit",
+            "markdown": 0
+        }
+    ],
+    "specials": [
+        {
+            "item": "yogurt",
+            "requirement": 3,
+            "discount": 2.35,
+            "limit": 6
+        },
+        {
+            "item": "paper towels",
+            "requirement": 2,
+            "discount": 2
+        }
+    ]
+}
