@@ -11,16 +11,7 @@
 #   ex. buy 2 get 1 free, limit 6. prevent getting a third free item
 # Support Buy N get M of equal or lesser value for %X off, 
 
-# Notes:
-# Use delaritive approach to creating the store. 
-# Checkout items are read in chronologically
-# All specials can be simplified into a Requirement(Buy X) and Discount(Get Y)
-# They are worded differently as a mean of marketing and psychological manipulation 
-
-class Store():
-    def __init__(self, items:list=None, specials:list=None):
-        self.items=items
-        self.specials=specials
+from collections import defaultdict
 
 class StoreItem():
     def __init__(self, name, cost, unit, markdown):
@@ -29,12 +20,24 @@ class StoreItem():
         self.unit=unit
         self.markdown=markdown
 
-
 class Special():
-    def __init__(self, name, requirement, deal, limit):
-        self.name=name
-        self.requirement=requirement
+    def __init__(self, item, buy, discount, limit):
+        self.item=item
+        self.buy=buy
         self.discount=discount
         self.limit=limit
+        
+class Store():
+    def __init__(self, items:defaultdict=defaultdict(str), specials:defaultdict=defaultdict(list)):
+        self.items=items
+        self.specials=specials
+    def addItem(self, item:StoreItem):
+        self.items[item.name]=item
+    def removeItem(self, item:str):
+        del self.items[item]
+    def addSpecial(self, special:Special):
+        self.specials[special.item].append(special)
+    def removeSpecial(self, special:Special):
+        del self.specials[special.item]
 
 

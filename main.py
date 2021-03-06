@@ -6,6 +6,7 @@ https://github.com/PillarTechnology/kata-checkout-order-total
 '''
 import json
 import os
+from store import Store, StoreItem, Special
 # Admin Inventory Creation:
 # Creation of items in Store
 # Support Per Unit Item
@@ -20,7 +21,25 @@ import os
 # json file containing items to be created
 with open("storeitems.json") as f:
     storeItems=json.load(f)
-print(storeItems)
+
+firstStore=Store()
+for item in storeItems["items"]:
+    createdItem=StoreItem(
+        name=item.get("name"),
+        cost=item.get("cost"),
+        unit=item.get("unit"),
+        markdown=item.get("markdown")
+    )
+    firstStore.addItem(createdItem)
+
+for special in storeItems["specials"]:
+    createdSpecial=Special(
+        item=special.get("item"),
+        buy=special.get("buy"),
+        discount=special.get("discount"),
+        limit=special.get("limit")
+    )
+    firstStore.addSpecial(createdSpecial)
 
 
 # Input During Checkout:

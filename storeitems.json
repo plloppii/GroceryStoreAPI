@@ -28,13 +28,13 @@
     "specials": [
         {
             "item": "yogurt",
-            "requirement": 3,
+            "buy": 3,
             "discount": 2.35,
             "limit": 6
         },
         {
             "item": "paper towels",
-            "requirement": 2,
+            "buy": 2,
             "discount": 2
         }
     ]
