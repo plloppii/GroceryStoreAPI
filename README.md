@@ -1,4 +1,18 @@
-### GroceryStoreAPI
+### GroceryStoreAPI 
+A simple API that emulates the backend of a grocery store.
+Admins have the ability to create a store, adding inventory and specials/discounts
+Customers checkout by scanning items creating a shopping cart with a specific ID. Specials/discounts are automatically applied
+Details such as the pre-tax subtotal of the cart can be fetched.
+
+# Usage:
+```
+git clone https://github.com/plloppii/GroceryStoreAPI.git
+cd GroceryStoreAPI
+python3 main.py
+```
+
+# Requirements
+python>=3.0
 
 [Requirements](https://github.com/PillarTechnology/kata-checkout-order-total)
 ## Admin Inventory Creation
@@ -80,11 +94,3 @@ Example JSON Input of Scanned Checkout:
     ]
 }
 ```
-
-
-# Usage:
-python3 main.py
-
-
-# Requirements
-python>=3.0

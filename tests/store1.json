@@ -9,7 +9,7 @@
         {
             "name": "yogurt",
             "cost": 2.35,
-            "unit": "unit",
+            "unit": "each",
             "markdown": 0.2
         },
         {
@@ -21,7 +21,7 @@
         {
             "name": "Paper towels",
             "cost": 4,
-            "unit": "unit",
+            "unit": "each",
             "markdown": 0
         }
     ],
