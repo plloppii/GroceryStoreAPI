@@ -5,25 +5,38 @@
             "cost": 5,
             "unit": "lb",
             "markdown": 0
+        },
+        {
+            "name": "yogurt",
+            "cost": 2,
+            "unit": "each",
+            "markdown": 0
         }
     ],
     "specials": [
         {
             "item": "yogurt",
             "buy": 3,
-            "for": "$5",
+            "cost": 5,
             "limit": 6
         },
         {
             "item": "paper towels",
             "buy": 2,
-            "for": "$6"
+            "cost": 6
         },
         {
             "item": "Ground Beef",
-            "buy": 2,
-            "get": "$2",
-            "limit": 5
+            "buy": 3,
+            "get": 2,
+            "percent_discount": 50
+        },
+        {
+            "item": "Granola",
+            "buy": 3,
+            "get_eq_or_lt": 2,
+            "percent_discount": 50,
+            "limit": 10
         }
     ]
 }

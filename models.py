@@ -14,14 +14,26 @@ class StoreItem():
         return rtn
 
 class StoreSpecial():
-    def __init__(self, item:str, buy:int, discount:str, limit:int):
+    pass
+class StaticSpecial(StoreSpecial):
+    def __init__(self, item:StoreItem, buy:int, cost:int, limit:int=None):
         self.item=item
         self.buy=buy
-        self.discount=discount
+        self.cost=cost
         self.limit=limit
+    def calculateDiscount(self):
+        pass
     def __str__(self):
-        return "Buy: {} {} Get: {} off Limit: {}".format(self.buy, self.item, self.discount, self.limit)
-
+        return "{} special: Buy {} for ${}, Limit:{}".format(self.item.name, self.buy, self.cost, self.limit)
+class DynamicSpecial(StoreSpecial):
+    def __init__(self, item:StoreItem, buy:int, getEqOrLt:int, percentDiscount:int, limit:int=None):
+        self.item=item
+        self.buy=buy
+        self.getEqOrLt=getEqOrLt
+        self.percentDiscount=percentDiscount
+        self.limit=limit
+    def calculateDiscount(self):
+        pass
         
 class Store():
     def __init__(self, storeFile:str):
@@ -48,20 +60,55 @@ class Store():
             self.addItem(createdItem)
     def loadSpecials(self, specialList:list):
         for special in specialList:
-            createdStoreSpecial=StoreSpecial(
-                item=special.get("item").lower(),
-                buy=special.get("buy"),
-                discount=special.get("discount"),
-                limit=special.get("limit")
-            )
-            self.addSpecial(createdStoreSpecial)
+            self.loadSpecial(special)
+    
+    def loadSpecial(self, special:dict):
+        itemName=special.get("item").lower()
+        fetchItem=self.getItem(itemName)
+        if not fetchItem:
+            print("Cannot add special for {}! Item does not exist in store".format(itemName))
+            return
+        buy= special.get("buy")
+        if not buy:
+            print("Input specials JSON object does not contain buy attribute!")
+            return 
+        if type(buy) != int:
+            print("buy attribute of Input specials JSON is not of type int!")
+            return 
+
+        createdStoreSpecial=None
+        #TODO Check validity of the Special
+        if "cost" in special:
+            cost=special.get("cost")
+            limit=special.get("limit") #TODO Type check the json object, 
+            createdStoreSpecial=StaticSpecial(fetchItem,buy,cost,limit)
+        #Convert buy N get M X% Off to a Static Special. 
+        elif "get" in special:
+            get=special.get("get")
+            percentDiscount=special.get("percent_discount")
+            cost=(buy*fetchItem.cost)+ ((get*fetchItem.cost) * (percentDiscount/100))
+            limit=special.get("limit") 
+            createdStoreSpecial=StaticSpecial(fetchItem,buy+get,cost,limit)
+        elif "get_eq_or_lt" in special and "%" in special.get("get"):
+            dynamic=True
+            getEqOrLt=special.get("get_eq_or_lt")
+            percentDiscount=special.get("percent_discount")
+            #TODO getEqOrLt+buy should be a multiple of limit if provided. 
+            limit=special.get("limit")             
+            createdStoreSpecial=DynamicSpecial(fetchItem,buy,getEqOrLt,percentDiscount,limit)
+
+        if not createdStoreSpecial:
+            print("Input JSON Special object is invalid. Failed to create store special")
+        print(createdStoreSpecial)
+        self.addSpecial(createdStoreSpecial)
+
 
     def addItem(self, item:StoreItem):
         self.items[item.name]=item
     def deleteItem(self, item:str):
         del self.items[item]
     def addSpecial(self, special:StoreSpecial):
-        self.specials[special.item].append(special)
+        self.specials[special.item.name].append(special)
     def deleteSpecial(self, special:StoreSpecial):
         del self.specials[special.item]
 
@@ -86,10 +133,11 @@ class Store():
         return rtn
             
 class LineItem():
-    def __init__(self, item, quantity:int):
+    def __init__(self, item:StoreItem, quantity:int):
         self.item=item
         self.quantity=quantity
         self.discount=0
+        self.appliedSpecial=None
     
     def getName(self): return self.item.name
     def getCost(self): return self.item.cost
@@ -97,9 +145,21 @@ class LineItem():
     def getMarkdown(self): return self.item.markdown
     def getQuantity(self): return self.quantity
     def getSubtotal(self):
+        return self.quantity*(self.getCost()-self.getMarkdown()) - self.discount
+    def getSubtotal_NoDiscount(self):
         return self.quantity*(self.getCost()-self.getMarkdown())
-    def processSpecial(self, special):
-        pass
+    def processSpecial(self, special:StoreSpecial):
+        if isinstance(special, StaticSpecial):
+            if self.quantity >= special.buy:
+                discountPerSpecialUnit=(self.getCost()*special.buy)-special.cost
+                if special.limit: timesApplied=special.limit/special.buy if (self.quantity//special.buy)>special.limit else self.quantity//special.buy
+                else: timesApplied=self.quantity//special.buy
+                self.discount=timesApplied*discountPerSpecialUnit
+    def __str__(self):
+        rtn= "\tQt:{}\t\t{:.2f}".format(self.getQuantity(), self.getSubtotal_NoDiscount())
+        if self.discount>0: 
+            rtn+= "\nspecial\t\t\t-{:.2f}".format(self.discount)
+        return rtn
 
 class CustomerCart():
     def __init__(self, storeInstance):
@@ -120,7 +180,7 @@ class CustomerCart():
         itemName=item.get("item").lower()
         itemQt=item.get("qt")
 
-        fetchSpecial=self.store.getSpecial(itemName)
+        fetchSpecial=self.store.getSpecial(itemName)[0]
         fetchItem=self.store.getItem(itemName)
 
         if fetchItem:
@@ -130,7 +190,7 @@ class CustomerCart():
                 lineItem.processSpecial(fetchSpecial)
         else:
             print("Scan invalid! {} not found in store".format(itemName))
-        
+            return
         self.cart[itemName]=lineItem
 
     def add_or_create_lineitem(self, item:StoreItem, quantity:int)-> LineItem:
@@ -145,7 +205,7 @@ class CustomerCart():
 
         for lineItem in self.cart.values():
             print(lineItem.item)
-            print("\tQt:{}\t\t{:.2f}".format(lineItem.getQuantity(), lineItem.getSubtotal()))
+            print(lineItem)
 
         print("-------------------------------")
         print("Subtotal:\t\t{:.2f}".format(subtotal))
