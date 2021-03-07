@@ -12,7 +12,6 @@ class StoreItem():
         rtn="{} @ {}/{} ".format(self.name, self.cost, self.unit)
         rtn+="\nmarkdown: {:.2f}".format(self.markdown) if self.markdown and self.markdown>0 else ""
         return rtn
-        #return "{}: {}$/{} Markdown:{}".format(self.name,self.cost,self.unit,self.markdown)
 
 class StoreSpecial():
     def __init__(self, item:str, buy:int, discount:str, limit:int):
@@ -114,7 +113,7 @@ class CustomerCart():
         scanItems=inputCart.get("scannedItems")
          
         for item in scanItems:
-            if item.get("action")=="ADD":
+            if item.get("action").upper()=="ADD":
                 self.scanItem(item)
     
     def scanItem(self, item:dict):
@@ -125,13 +124,21 @@ class CustomerCart():
         fetchItem=self.store.getItem(itemName)
 
         if fetchItem:
-            lineItem=LineItem(item=fetchItem, quantity=itemQt)
+            lineItem = self.add_or_create_lineitem(item=fetchItem, quantity=itemQt)
+            print("Scanned {}".format(lineItem.getName()))
             if fetchSpecial:
                 lineItem.processSpecial(fetchSpecial)
         else:
             print("Scan invalid! {} not found in store".format(itemName))
         
         self.cart[itemName]=lineItem
+
+    def add_or_create_lineitem(self, item:StoreItem, quantity:int)-> LineItem:
+        if item.name in self.cart:
+            self.cart[item.name].quantity+=quantity
+        else:
+            self.cart[item.name]= LineItem(item=item, quantity=quantity)
+        return self.cart.get(item.name)
 
     def getSubtotal(self):
         subtotal=sum([ln.getSubtotal() for ln in self.cart.values()])
@@ -143,17 +150,3 @@ class CustomerCart():
         print("-------------------------------")
         print("Subtotal:\t\t{:.2f}".format(subtotal))
         return subtotal
-
-    
-
-            
-
-        
-
-
-
-
-
-
-
-
