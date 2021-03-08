@@ -11,6 +11,12 @@
             "cost": 2,
             "unit": "each",
             "markdown": 0
+        },
+        {
+            "name": "graNoLA",
+            "cost": 1,
+            "unit": "each",
+            "markdown": 0
         }
     ],
     "specials": [

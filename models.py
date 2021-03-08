@@ -21,10 +21,10 @@ class StaticSpecial(StoreSpecial):
         self.buy=buy
         self.cost=cost
         self.limit=limit
-    def calculateDiscount(self):
-        pass
+
     def __str__(self):
         return "{} special: Buy {} for ${}, Limit:{}".format(self.item.name, self.buy, self.cost, self.limit)
+
 class DynamicSpecial(StoreSpecial):
     def __init__(self, item:StoreItem, buy:int, getEqOrLt:int, percentDiscount:int, limit:int=None):
         self.item=item
@@ -32,8 +32,8 @@ class DynamicSpecial(StoreSpecial):
         self.getEqOrLt=getEqOrLt
         self.percentDiscount=percentDiscount
         self.limit=limit
-    def calculateDiscount(self):
-        pass
+    def __str__(self):
+        return "{} special: Buy {} get {} equal or less than at {}% off, Limit:{}".format(self.item.name, self.buy, self.getEqOrLt, self.percentDiscount, self.limit)
         
 class Store():
     def __init__(self, storeFile:str):
@@ -50,15 +50,26 @@ class Store():
 
 
     def loadItems(self, itemList:list):
+        print()
+        print("Loading Items into Store")
+        print("------------------------")
         for item in itemList:
-            createdItem=StoreItem(
-                name=item.get("name").lower(),
-                cost=item.get("cost"),
-                unit=item.get("unit"),
-                markdown=item.get("markdown")
-            )
-            self.addItem(createdItem)
+            self.loadItem(item)
+
+    def loadItem(self, item:dict):
+        createdItem=StoreItem(
+            name=item.get("name").lower(),
+            cost=item.get("cost"),
+            unit=item.get("unit"),
+            markdown=item.get("markdown")
+        )
+        print(createdItem)
+        self.addItem(createdItem)
+
     def loadSpecials(self, specialList:list):
+        print()
+        print("Loading Specials into Store")
+        print("---------------------------")
         for special in specialList:
             self.loadSpecial(special)
     
@@ -89,7 +100,7 @@ class Store():
             cost=(buy*fetchItem.cost)+ ((get*fetchItem.cost) * (percentDiscount/100))
             limit=special.get("limit") 
             createdStoreSpecial=StaticSpecial(fetchItem,buy+get,cost,limit)
-        elif "get_eq_or_lt" in special and "%" in special.get("get"):
+        elif "get_eq_or_lt" in special:
             dynamic=True
             getEqOrLt=special.get("get_eq_or_lt")
             percentDiscount=special.get("percent_discount")
@@ -155,6 +166,15 @@ class LineItem():
                 if special.limit: timesApplied=special.limit/special.buy if (self.quantity//special.buy)>special.limit else self.quantity//special.buy
                 else: timesApplied=self.quantity//special.buy
                 self.discount=timesApplied*discountPerSpecialUnit
+        elif isinstance(special, DynamicSpecial):
+            timesApplied= self.quantity // (special.buy + special.getEqOrLt)
+            unitDiscount= self.getCost() * (special.percentDiscount/100)
+
+            discount= timesApplied* (special.getEqOrLt * unitDiscount)
+            remaining= self.quantity % (special.buy + special.getEqOrLt)
+            discountedRemaining= (remaining-special.buy) * unitDiscount if remaining>special.buy else 0
+            self.discount= discount+discountedRemaining
+             
     def __str__(self):
         rtn= "\tQt:{}\t\t{:.2f}".format(self.getQuantity(), self.getSubtotal_NoDiscount())
         if self.discount>0: 
@@ -168,6 +188,9 @@ class CustomerCart():
         self.cart=defaultdict(LineItem)
 
     def processItems(self, cartFile:str):
+        print()
+        print("Scanning Items for Cart#{}".format(self.id))
+        print("---------------------------")
         with open(cartFile) as f:
             inputCart=json.load(f)
         scanItems=inputCart.get("scannedItems")
@@ -175,19 +198,20 @@ class CustomerCart():
         for item in scanItems:
             if item.get("action").upper()=="ADD":
                 self.scanItem(item)
+            elif item.get("action").upper()=="REMOVE"
     
     def scanItem(self, item:dict):
         itemName=item.get("item").lower()
         itemQt=item.get("qt")
 
-        fetchSpecial=self.store.getSpecial(itemName)[0]
+        fetchSpecial=self.store.getSpecial(itemName)
         fetchItem=self.store.getItem(itemName)
 
         if fetchItem:
             lineItem = self.add_or_create_lineitem(item=fetchItem, quantity=itemQt)
             print("Scanned {}".format(lineItem.getName()))
             if fetchSpecial:
-                lineItem.processSpecial(fetchSpecial)
+                lineItem.processSpecial(fetchSpecial[0])
         else:
             print("Scan invalid! {} not found in store".format(itemName))
             return
