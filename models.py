@@ -196,37 +196,53 @@ class CustomerCart():
         scanItems=inputCart.get("scannedItems")
          
         for item in scanItems:
+            itemName=item.get("item").lower()
+            itemQt=item.get("qt")
+
+            fetchItem=self.store.getItem(itemName)
+            if not fetchItem:
+                print("Scan invalid! {} not found in store".format(itemName))
+                continue
+            
             if item.get("action").upper()=="ADD":
-                self.scanItem(item)
-            elif item.get("action").upper()=="REMOVE"
-    
-    def scanItem(self, item:dict):
-        itemName=item.get("item").lower()
-        itemQt=item.get("qt")
+                lineItem= self.scanItem(fetchItem, itemQt)
+            elif item.get("action").upper()=="REMOVE":
+                lineItem= self.removeItem(fetchItem, itemQt)
 
-        fetchSpecial=self.store.getSpecial(itemName)
-        fetchItem=self.store.getItem(itemName)
-
-        if fetchItem:
-            lineItem = self.add_or_create_lineitem(item=fetchItem, quantity=itemQt)
-            print("Scanned {}".format(lineItem.getName()))
-            if fetchSpecial:
+            fetchSpecial=self.store.getSpecial(itemName)
+            if lineItem and fetchSpecial:
                 lineItem.processSpecial(fetchSpecial[0])
+            
+    
+    def removeItem(self, fetchItem, itemQt):
+        if fetchItem.name in self.cart:
+            lineItem=self.cart[fetchItem.name]
+            lineItem.quantity-=itemQt
+            if lineItem.quantity <= 0: 
+                print("Removed {}".format(fetchItem.name))
+                del fetchItem
+            else:
+                print("Removed {} Qt.{}".format(fetchItem.name, itemQt))
+                return lineItem
         else:
-            print("Scan invalid! {} not found in store".format(itemName))
-            return
-        self.cart[itemName]=lineItem
-
-    def add_or_create_lineitem(self, item:StoreItem, quantity:int)-> LineItem:
-        if item.name in self.cart:
-            self.cart[item.name].quantity+=quantity
+            print("Cannot Remove {}. Non-existant in cart".format(fetchItem.name))
+        return None
+        
+    def scanItem(self, fetchItem:StoreItem, itemQt:int):
+        if fetchItem.name in self.cart:
+            lineItem=self.cart[fetchItem.name]
+            lineItem.quantity+=itemQt
         else:
-            self.cart[item.name]= LineItem(item=item, quantity=quantity)
-        return self.cart.get(item.name)
+            self.cart[fetchItem.name]= LineItem(item=fetchItem, quantity=itemQt)
+            lineItem=self.cart[fetchItem.name]
+        print("Scanned {} Qt.{}".format(lineItem.getName(), itemQt))
+        return lineItem
 
     def getSubtotal(self):
         subtotal=sum([ln.getSubtotal() for ln in self.cart.values()])
-
+        print()
+        print("Subtotal for Cart#{}".format(self.id))
+        print("----------------------------------")
         for lineItem in self.cart.values():
             print(lineItem.item)
             print(lineItem)
