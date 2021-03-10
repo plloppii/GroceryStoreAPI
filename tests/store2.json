@@ -8,32 +8,20 @@
         },
         {
             "name": "yogurt",
-            "cost": 2,
+            "cost": 2.35,
             "unit": "each",
-            "markdown": 0
+            "markdown": 0.2
         },
         {
-            "name": "graNoLA",
-            "cost": 1,
-            "unit": "each",
-            "markdown": 0
+            "name": "Granola",
+            "cost": 1.8,
+            "unit": "lb",
+            "markdown": 0.4
         },
         {
-            "name": "paper towels",
+            "name": "Paper towels",
             "cost": 4,
             "unit": "each",
-            "markdown": 0
-        },
-        {
-            "name": "chocolate",
-            "cost": 3,
-            "unit": "each",
-            "markdown": 0
-        },
-        {
-            "name": "lamb",
-            "cost": 8,
-            "unit": "lb",
             "markdown": 0
         }
     ],
@@ -41,26 +29,25 @@
         {
             "item": "yogurt",
             "buy": 3,
-            "cost": 5,
+            "for": "$5",
             "limit": 6
         },
         {
             "item": "paper towels",
             "buy": 2,
-            "cost": 6
+            "for": "$6"
         },
         {
             "item": "Ground Beef",
-            "buy": 3,
-            "get": 2,
-            "percent_discount": 50
+            "buy": 2,
+            "get": "50%",
+            "limit": 5
         },
         {
-            "item": "Granola",
-            "buy": 3,
-            "get_eq_or_lt": 2,
-            "percent_discount": 50,
-            "limit": 10
+            "item": "wut",
+            "buy": 2,
+            "get": "50%",
+            "limit": 5
         }
     ]
 }

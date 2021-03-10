@@ -2,7 +2,7 @@
     "scannedItems": [
         {
             "item": "granola",
-            "qt": 10,
+            "qt": 9,
             "action": "ADD"
         },
         {
@@ -12,7 +12,7 @@
         },
         {
             "item": "ground beef",
-            "qt": 2.11,
+            "qt": 5,
             "action": "ADD"
         }
     ]

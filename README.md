@@ -10,11 +10,23 @@ git clone https://github.com/plloppii/GroceryStoreAPI.git
 cd GroceryStoreAPI
 python3 main.py
 ```
+Run main.py for all tests. Edit and comment out blocks of main.py to view test cases one by one. 
+
+# API Usage:
+```
+from models import Store
+# Store creation
+myStore = Store(storeFile="./testStore.json")
+# Customer Cart creation
+firstCustomerCart = myStore.createCustomerCart()
+firstCustomerCart.processItems(cartFile="./myCart.json")
+firstCustomerCart.getSubtotal()
+```
 
 # Requirements
 python>=3.0
 
-[Requirements](https://github.com/PillarTechnology/kata-checkout-order-total)
+[Design Requirements](https://github.com/PillarTechnology/kata-checkout-order-total)
 ## Admin Inventory Creation
 Creation of items in Store
 Support Per Unit Item
@@ -28,7 +40,7 @@ Support Specials
 * Buy N get M of equal or lesser value for %X off, 
     * ex. buy 2 lbs of ground beed, get 1 lb half off
 
-Notes:
+## Notes
 Use delaritive approach to creating the store. 
 Checkout items are read in chronologically
 
@@ -56,7 +68,7 @@ Ex.
 * Buy 2 lbs of Ground Beef, Get next 3lbs equal or lesser value for 50% off 
     * Scans 4 lbs-> [2lbs * $5] + [(2lbs * $5) * 50%] = $15
 
-## Design
+## JSON Object Format
 Inputs of the systems are JSON format objects for portability and compatibility
 The Grocery Store API is broken down into down parts
 First, a store creation process, where a store manager can interact with a UI to create Grocery Items
@@ -96,5 +108,27 @@ Example JSON Input of Scanned Checkout:
             "action": "ADD"
         }
     ]
+}
+```
+Specials JSON Object Format:
+```
+{
+    "item": "Item1" [str, required],
+    "buy": 2 [int, required],
+    "cost": 6 [int, required],
+    "limit": 100 [int, optional]
+},
+{
+    "item": "Item2" [str, required],
+    "buy": 3 [int, required],
+    "get": 2 [int, required],
+    "percent_discount": 50 [0<int<100, required]
+},
+{
+    "item": "Granola" [str, required],
+    "buy": 3 [int, required],
+    "get_eq_or_lt": 2 [int, required],
+    "percent_discount": 50 [int, required],
+    "limit": 10 [int, optional]
 }
 ```

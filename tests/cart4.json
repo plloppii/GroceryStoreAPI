@@ -2,12 +2,12 @@
     "scannedItems": [
         {
             "item": "granola",
-            "qt": 10,
+            "qt": 6,
             "action": "ADD"
         },
         {
             "item": "yogURT",
-            "qt": 20,
+            "qt": 3,
             "action": "ADD"
         },
         {
@@ -22,8 +22,13 @@
         },
         {
             "item": "ground beef",
-            "qt": 5,
+            "qt": 7.12,
             "action": "ADD"
+        },
+        {
+            "item": "ground beef",
+            "qt": 5,
+            "action": "REMOVE"
         },
         {
             "item": "ground beef",
@@ -33,7 +38,7 @@
         {
             "item": "ground beef",
             "qt": 2.11,
-            "action": "ADD"
+            "action": "REMOVE"
         }
     ]
 }
