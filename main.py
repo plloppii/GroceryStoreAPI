@@ -76,7 +76,7 @@ if __name__ == "__main__":
             testsToRun.add("singleItemsTest")
         elif sys.argv[1] == "alltests":                
             cartTests=True
-            testsToRun.update(["test1", "test2", "test3", "test4"])
+            testsToRun.update(["storeTest", "test1", "test2", "test3", "test4", "singleItemsTest"])
         elif sys.argv[1] in ["test1", "test2", "test3", "test4"]:
             cartTests=True                
             testsToRun.add(sys.argv[1])

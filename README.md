@@ -8,7 +8,10 @@ Details such as the pre-tax subtotal of the cart can be fetched.
 ```
 git clone https://github.com/plloppii/GroceryStoreAPI.git
 cd GroceryStoreAPI
+# Print out usage
 python3 main.py
+# Run all tests
+python3 main.py alltests
 ```
 Run main.py for all tests. Edit and comment out blocks of main.py to view test cases one by one. 
 
