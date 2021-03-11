@@ -298,6 +298,7 @@ class CustomerCart():
     #Prints out a breakdown of the total and returns the subtotal.
     def getSubtotal(self)->int:
         subtotal=sum([ln.getSubtotal() for ln in self.cart.values()])
+        subtotal=float("{:.2f}".format(subtotal))
         print()
         print("Reciept")
         print("--------")
