@@ -3,12 +3,17 @@
 import os
 from models import Store
 
-#Store Tests
+# -----------------------------------------
+# Store Tests
+# -----------------------------------------
 
 # store1=Store(storeFile="tests/store1.json") #Store With Invalid Items
 # store2=Store(storeFile="tests/store2.json") #Store With Invalid Specials
 
+# -----------------------------------------
 # Cart Tests
+# -----------------------------------------
+
 store3=Store(storeFile="tests/store3.json")
 
 # cart1=store3.createCustomerCart()
@@ -27,8 +32,26 @@ cart2.getSubtotal()
 # cart4.processItems(cartFile="tests/cart4.json") # REMOVE negative test
 # cart4.getSubtotal()
 
+# -----------------------------------------
+# Adding Items to customer cart one by one
+# -----------------------------------------
+
 # store4=Store(storeFile="tests/store4.json")
-# cart1=store4.createCustomerCart()
-# cart1.processItems(cartFile="tests/cart1.json")
-# cart1.getSubtotal()
+# mycart=store4.createCustomerCart()
+# mycart.processItem({
+#     "item":"Ground beef",
+#     "qt":3, 
+#     "action":"ADD"
+# })
+# mycart.processItem({
+#     "item":"yogurt",
+#     "qt":8,
+#     "action":"ADD"
+# })
+# mycart.processItem({
+#     "item":"yogurt",
+#     "qt":2,
+#     "action":"REMOVE"
+# })
+# mycart.getSubtotal()
 

@@ -9,6 +9,11 @@
             "item": "yogURT",
             "qt": 1,
             "action": "ADD"
+        },
+        {
+            "item": "candy",
+            "qt": 1,
+            "action": "ADD"
         }
     ]
 }

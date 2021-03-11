@@ -11,7 +11,7 @@ class StoreItem():
         self.markdown=markdown
     def __str__(self):
         rtn="{} @ {}/{} ".format(self.name, self.cost, self.unit)
-        rtn+="\nmarkdown: {:.2f}".format(self.markdown) if self.markdown and self.markdown>0 else ""
+        rtn+=" markdown: {:.2f}".format(self.markdown) if self.markdown and self.markdown>0 else ""
         return rtn
 
 #Two Types of Store Specials

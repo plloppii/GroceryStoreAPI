@@ -19,9 +19,15 @@
             "markdown": -10
         },
         {
-            "name": "Paper towels",
+            "name": "paper towels",
             "cost": 4,
             "unit": "each",
+            "markdown": 0
+        },
+        {
+            "name": "lamb",
+            "cost": 4,
+            "unit": "shank",
             "markdown": 0
         }
     ]
